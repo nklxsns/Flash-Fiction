@@ -1,0 +1,244 @@
+body {
+  background-color: #494949;
+}
+
+.profile-menu {
+  .dropdown-menu {
+    right: 0;
+    left: unset;
+  }
+}
+.toggle-change {
+  &::after {
+    border-top: 0;
+    border-bottom: 0.3em solid;
+  }
+}
+
+.animated-button {
+  position: fixed;
+  z-index: 1;
+  top: auto;
+  right: 20px;
+  bottom: 20px;
+  left: auto;
+
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  padding: 5px 30px;
+  border: 4px solid;
+  border-color: transparent;
+  font-size: 16px;
+  border-radius: 100px;
+  font-weight: 600;
+  color: #1f387e;
+  box-shadow: 0 0 0 2px #ffffff;
+  cursor: pointer;
+  overflow: hidden;
+  transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.animated-button svg {
+  position: absolute;
+  width: 24px;
+  fill: #1f387e;
+  z-index: 9;
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.animated-button .arr-1 {
+  right: 10px;
+}
+
+.animated-button .arr-2 {
+  left: -25%;
+}
+
+.animated-button .circle {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 20px;
+  height: 20px;
+  background-color: #c5e5e4;
+  border-radius: 50%;
+  opacity: 0;
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.animated-button .text {
+  position: relative;
+  z-index: 1;
+  transform: translateX(-12px);
+  transition: all 0.8s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.animated-button:hover {
+  box-shadow: 0 0 0 12px transparent;
+  color: #212121;
+  border-radius: 12px;
+}
+
+.animated-button:hover .arr-1 {
+  right: -25%;
+}
+
+.animated-button:hover .arr-2 {
+  left: 10px;
+}
+
+.animated-button:hover .text {
+  transform: translateX(12px);
+}
+
+.animated-button:hover svg {
+  fill: #1f387e;
+}
+
+.animated-button:active {
+  scale: 0.95;
+  box-shadow: 0 0 0 4px greenyellow;
+}
+
+.animated-button:hover .circle {
+  width: 220px;
+  height: 220px;
+  opacity: 1;
+}
+
+.dropdown:hover .dropdown-menu {
+  display: block;
+}
+
+.card-button {
+  background-color: black;
+  color: rgb(255, 255, 255);
+  box-shadow: none;
+  border: none;
+  margin-right: 10px;
+}
+
+.dropdown-toggle::after {
+  content: none !important;
+}
+
+.left-side {
+  background-color: #080808; /* Blue color */
+  color: white;
+}
+
+.right-side {
+  background-color: #2b2a2a; /* Green color */
+  color: white;
+}
+.row-a {
+  display: flex;
+  flex-wrap: wrap;
+}
+.card-style {
+  /* border: 5px solid #000000;  */
+  /* background-color: #080808; */
+}
+
+.container-like input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.container-like {
+  display: inline-flexbox;
+  position: relative;
+  cursor: pointer;
+  font-size: 20px;
+  user-select: none;
+  transition: 100ms;
+}
+
+.checkmark {
+  top: 0;
+  left: 0;
+  height: 2em;
+  width: 2em;
+  transition: 100ms;
+  animation: dislike_effect 400ms ease;
+}
+
+.container-like input:checked ~ .checkmark path {
+  fill: #ff5353;
+  stroke-width: 0;
+}
+
+.container-like input:checked ~ .checkmark {
+  animation: like_effect 400ms ease;
+}
+
+.card-animation {
+  display: block;
+  position: relative;
+  cursor: pointer;
+  font-size: 20px;
+  user-select: none;
+  transition: 550ms;
+}
+.card-animation:hover {
+  transform: scale(1.05);
+}
+
+@keyframes like_effect {
+  0% {
+    transform: scale(0);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes dislike_effect {
+  0% {
+    transform: scale(0);
+  }
+
+  50% {
+    transform: scale(1.2);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.like-share {
+  justify-content: space-between;
+}
+
+label {
+  margin-left: 20%;
+}
+
+.dropdown-menu > li > a:hover {
+  background-image: none;
+  background-color: rgb(209, 209, 209);
+}
+
+a {
+  text-decoration: none !important;
+}
+
+.img-div {
+  height: 35px;
+  width: 35px;
+  border-radius: 50%;
+  background-image: url(../images/img3.jpg);
+  background-position: center;
+  background-size: cover;
+}

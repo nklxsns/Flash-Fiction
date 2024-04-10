@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Contribution Menu</title>
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.2/dist/quill.snow.css"
+      rel="stylesheet"
+    />
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/story-contri.css') }}"
+    />
+
+  </head>
+  <body>
+    <div class="d-flex justify-content-center align-items-center bg-light">
+      <div class="p-3 shadow align-items-center" style="max-width: 90%">
+        <form action="/home" onsubmit="sendData()">
+          <h2 class="text-center p-3">Make a Story</h2>
+
+          <div class="m-3">
+            <label for="title">Title: </label>
+            <input name="title" type="text" placeholder="Title" id="title" required/>
+          </div>
+          <nav>
+            <div class="nav nav-tabs mb-3" id="nav-tab" role="tablist">
+              <button
+                class="nav-link active"
+                id="nav-home-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#nav-home"
+                type="button"
+                role="tab"
+                aria-controls="nav-home"
+                aria-selected="true"
+              >
+                Part-1
+              </button>
+              <button
+                class="nav-link"
+                id="nav-profile-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#nav-profile"
+                type="button"
+                role="tab"
+                aria-controls="nav-profile"
+                aria-selected="false"
+              >
+                Part-2
+              </button>
+              <button
+                class="nav-link"
+                id="nav-contact-tab"
+                data-bs-toggle="tab"
+                data-bs-target="#nav-contact"
+                type="button"
+                role="tab"
+                aria-controls="nav-contact"
+                aria-selected="false"
+              >
+                Part-3
+              </button>
+            </div>
+            <div class="tab-content p-3 border bg-light" id="nav-tabContent">
+              <div
+                class="tab-pane fade active show"
+                id="nav-home"
+                role="tabpanel"
+                aria-labelledby="nav-home-tab"
+              >
+                <div id="editor1" name="part1"></div>
+              </div>
+              <div
+                class="tab-pane fade"
+                id="nav-profile"
+                role="tabpanel"
+                aria-labelledby="nav-profile-tab"
+              >
+                <div id="editor2" name="part2"></div>
+              </div>
+              <div
+                class="tab-pane fade"
+                id="nav-contact"
+                role="tabpanel"
+                aria-labelledby="nav-contact-tab"
+              >
+                <div id="editor3" name="part3"></div>
+              </div>
+            </div>
+          </nav>
+
+          <button
+            class="btn btn-primary my-3"
+            type="submit"
+            onclick="return validate()"
+          >
+            Submit
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.2/dist/quill.js"></script>
+
+    <script>
+      const quill1 = new Quill("#editor1", {
+        theme: "snow",
+        placeholder: "This will be shown as Introduction of your story..."
+      });
+      const quill2 = new Quill("#editor2", {
+        theme: "snow",
+      });
+      const quill3 = new Quill("#editor3", {
+        theme: "snow",
+        placeholder: "Other Storifiers will contribute for this part..."
+      });
+
+      function sendData() {
+        const title = document.getElementById("title");
+        var quillval1 = quill1.getSemanticHTML();
+        var quillval2 = quill2.getSemanticHTML();
+        var quillval3 = quill3.getSemanticHTML();
+
+        var postData = {
+          title: title.value,
+          part1: quillval1,
+          part2: quillval2,
+          part3: quillval3,
+        };
+        fetch("/create-story", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(postData),
+        });
+      }
+
+      function validate() {
+        if (title.value.trim() === "") {
+          alert("Title cannot be empty");
+        } else if (quill1.getLength() <= 5) {
+          alert("Part-1 cannot have less than 50 characters");
+        } else if (quill2.getLength() <= 5) {
+          alert("Part-2 cannot have less than 50 characters");
+        } else if (quill3.getLength() <= 5) {
+          alert("Part-3 cannot have less than 50 characters");
+        } else {
+          return true;
+        }
+        return false;
+      }
+    </script>
+  </body>
+</html>

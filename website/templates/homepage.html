@@ -1,0 +1,126 @@
+{% extends 'base.html' %} {% block title %} Storify {% endblock %} {% block
+content %}
+<!-- Main Content -->
+
+{% for story in stories %}
+<a href="/view-story/{{ story.id }}">
+  <div class="container my-5 card-animation">
+    <div class="row-a">
+      <div class="col-md-9 card-style">
+        <div class="card h-100 left-side">
+          <div class="card-body">
+            <h2 class="card-title" style="color: #93d1d4;">{{ story.title }}</h2>
+            <p class="card-text">{{ story.part1|safe }}</p>
+            <div class="like-share">
+              <label class="container-like">
+                {% if user.id in story.likes|map(attribute="user_id")|list %}
+                <input
+                  type="checkbox"
+                  id="story-like-button-{{ story.id }}"
+                  onclick="likeStory({{ story.id }})"
+                  checked
+                />
+                {% else %}
+                <input
+                  type="checkbox"
+                  id="story-like-button-{{ story.id }}"
+                  onclick="likeStory({{ story.id }})"
+                />
+                {% endif %}
+                <div class="checkmark">
+                  <svg viewBox="0 0 256 256">
+                    <rect fill="none" height="256" width="256"></rect>
+                    <path
+                      d="M224.6,51.9a59.5,59.5,0,0,0-43-19.9,60.5,60.5,0,0,0-44,17.6L128,59.1l-7.5-7.4C97.2,28.3,59.2,26.3,35.9,47.4a59.9,59.9,0,0,0-2.3,87l83.1,83.1a15.9,15.9,0,0,0,22.6,0l81-81C243.7,113.2,245.6,75.2,224.6,51.9Z"
+                      stroke-width="20px"
+                      stroke="#FFF"
+                      fill="none"
+                    ></path>
+                  </svg>
+                </div>
+              </label>
+              <span id="story-likes-count-{{ story.id }}"
+                >{{ story.likes|length }}</span
+              >
+
+              <label class="container-like">
+                <input
+                  type="checkbox"
+                  onclick="copyToClipboard(window.location.origin + '/view-story/{{ story.id }}')"
+                />
+                <div class="">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="35"
+                    height="35"
+                    fill="currentColor"
+                    class="bi bi-share"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5m-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3"
+                    />
+                  </svg>
+                </div>
+              </label>
+              {% if user.id == story.user.id %}
+              <label class="container-like">
+                <input
+                  type="checkbox"
+                  onclick="deleteStory({{ story.id }})"
+                />
+                <div class="">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="35"
+                    height="35"
+                    fill="red"
+                    class="bi bi-trash"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"
+                    />
+                    <path
+                      d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"
+                    />
+                  </svg>
+                </div>
+              </label>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 card-style">
+        <div class="card h-100 right-side">
+          <div class="card-body">
+            <p style="color: #93d1d4; font-weight: 700;">Created by: {{ story.user.username }}</p>
+            <p>{{ story.created_at }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</a>
+
+{% endfor %}
+
+<a href="/create-story">
+  <button class="animated-button">
+    <svg viewBox="0 0 24 24" class="arr-2" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"
+      ></path>
+    </svg>
+    <span class="text">Make Story</span>
+    <span class="circle"></span>
+    <svg viewBox="0 0 24 24" class="arr-1" xmlns="http://www.w3.org/2000/svg">
+      <path
+        d="M16.1716 10.9999L10.8076 5.63589L12.2218 4.22168L20 11.9999L12.2218 19.778L10.8076 18.3638L16.1716 12.9999H4V10.9999H16.1716Z"
+      ></path>
+    </svg>
+  </button>
+</a>
+
+{% endblock %}

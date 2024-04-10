@@ -1,0 +1,273 @@
+{% extends 'base.html' %} {% block title %} Storify {% endblock %} {% block
+content %}
+<link
+  rel="stylesheet"
+  href="{{ url_for('static', filename='css/profile-styles.css') }}"
+/>
+<div class="container pt-5 pb-4">
+  <div class="row" style="background-color: rgb(32, 29, 29)">
+    <div class="col-lg-12">
+      <div class="mb-3 info">
+        <div class="mb-3 p-3">
+          <div class="banner"></div>
+          <div class="d-center gap-3 py-3 justify-content-between">
+            <div class="gap-3 align-items-center d-flex">
+              <div class="profile"></div>
+              <div>
+                <h4 class="mb-2 name">{{ profile_user.username }}</h4>
+              </div>
+            </div>
+            {% if user.id == profile_user.id %}
+            <div class="gap-3 d.center">
+              <div>
+                <a href="/edit-profile/{{ user.id }}">
+                  <button type="button" class="btn btn-secondary">
+                    Edit Profile <i class="bi bi-pencil-square"></i>
+                  </button>
+                </a>
+              </div>
+            </div>
+            {% endif %}
+          </div>
+          <div>
+            <h4 style="color: aliceblue">{{ user.bio }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <br />
+  <h1 class="text-white">Stories by {{ profile_user.username }}</h1>
+  <hr class="text-white" />
+  {% for story in stories %}
+  <a href="/view-story/{{ story.id }}">
+    <div class="container my-5 card-animation">
+      <div class="row-a">
+        <div class="col-md-9 card-style">
+          <div class="card h-100 left-side">
+            <div class="card-body">
+              <h2 class="card-title"  style="color: #93d1d4">{{ story.title }}</h2>
+              <p class="card-text">{{ story.part1|safe }}</p>
+              <div class="like-share">
+                <label class="container-like">
+                  {% if user.id in story.likes|map(attribute="user_id")|list %}
+                  <input
+                    type="checkbox"
+                    id="story-like-button-{{ story.id }}"
+                    onclick="likeStory({{ story.id }})"
+                    checked
+                  />
+                  {% else %}
+                  <input
+                    type="checkbox"
+                    id="story-like-button-{{ story.id }}"
+                    onclick="likeStory({{ story.id }})"
+                  />
+                  {% endif %}
+                  <div class="checkmark">
+                    <svg viewBox="0 0 256 256">
+                      <rect fill="none" height="256" width="256"></rect>
+                      <path
+                        d="M224.6,51.9a59.5,59.5,0,0,0-43-19.9,60.5,60.5,0,0,0-44,17.6L128,59.1l-7.5-7.4C97.2,28.3,59.2,26.3,35.9,47.4a59.9,59.9,0,0,0-2.3,87l83.1,83.1a15.9,15.9,0,0,0,22.6,0l81-81C243.7,113.2,245.6,75.2,224.6,51.9Z"
+                        stroke-width="20px"
+                        stroke="#FFF"
+                        fill="none"
+                      ></path>
+                    </svg>
+                  </div>
+                </label>
+                <span id="story-likes-count-{{ story.id }}"
+                  >{{ story.likes|length }}</span
+                >
+  
+                <label class="container-like">
+                  <input
+                    type="checkbox"
+                    onclick="copyToClipboard(window.location.origin + '/view-story/{{ story.id }}')"
+                  />
+                  <div class="">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="35"
+                      height="35"
+                      fill="currentColor"
+                      class="bi bi-share"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5m-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3"
+                      />
+                    </svg>
+                  </div>
+                </label>
+                {% if user.id == story.user.id %}
+                <label class="container-like">
+                  <input
+                    type="checkbox"
+                    onclick="deleteStory({{ story.id }})"
+                  />
+                  <div class="">
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      width="35"
+                      height="35"
+                      fill="red"
+                      class="bi bi-trash"
+                      viewBox="0 0 16 16"
+                    >
+                      <path
+                        d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"
+                      />
+                      <path
+                        d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"
+                      />
+                    </svg>
+                  </div>
+                </label>
+                {% endif %}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 card-style">
+          <div class="card h-100 right-side">
+            <div class="card-body">
+              <p style="color: #93d1d4; font-weight: 700;">Created by: {{ story.user.username }}</p>
+              <p>{{ story.created_at }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </a>
+  {% endfor %}
+
+  <br />
+  <h1 class="text-white">Contributions by {{ profile_user.username }}</h1>
+  <hr class="text-white" />
+
+  {% for contribution in contributions %}
+  <section>
+    <div class="container my-5 card-animation">
+      <div class="row-a">
+        <div class="col-md-9 card-style">
+          <div class="card h-100 left-side">
+            <div class="card-body">
+              <h2
+                class="card-title mb-4"
+                onclick="
+                window.location.href = (`/view-story/{{ contribution.story.id }}?data={{ contribution.content|safe }}`);"
+              >
+                {{ contribution.title }}
+              </h2>
+              <section
+                class="card-text"
+                onclick="
+                window.location.href = (`/view-story/{{ contribution.story.id }}?data={{ contribution.content|safe }}`);"
+              >
+                {{ contribution.content|safe }}
+              </section>
+            </div>
+            <div class="like-share mb-3">
+              <label class="container-like">
+                {% if user.id in
+                contribution.likes|map(attribute="user_id")|list %}
+                <input
+                  type="checkbox"
+                  id="contribution-like-button-{{ contribution.id }}"
+                  onclick="likeContribution({{ contribution.id }})"
+                  checked
+                />
+                {% else %}
+                <input
+                  type="checkbox"
+                  id="contribution-like-button-{{ contribution.id }}"
+                  onclick="likeContribution({{ contribution.id }})"
+                />
+                {% endif %}
+                <div class="checkmark">
+                  <svg viewBox="0 0 256 256">
+                    <rect fill="none" height="256" width="256"></rect>
+                    <path
+                      d="M224.6,51.9a59.5,59.5,0,0,0-43-19.9,60.5,60.5,0,0,0-44,17.6L128,59.1l-7.5-7.4C97.2,28.3,59.2,26.3,35.9,47.4a59.9,59.9,0,0,0-2.3,87l83.1,83.1a15.9,15.9,0,0,0,22.6,0l81-81C243.7,113.2,245.6,75.2,224.6,51.9Z"
+                      stroke-width="20px"
+                      stroke="#FFF"
+                      fill="none"
+                    ></path>
+                  </svg>
+                </div>
+              </label>
+              <span id="contribution-likes-count-{{ contribution.id }}"
+                >{{ contribution.likes|length }}</span
+              >
+
+              <label class="container-like">
+                <input
+                  type="checkbox"
+                  onclick="copyToClipboard(window.location.origin + '/view-story/{{ contribution.story.id }}?data={{ contribution.content|safe }}')"
+                />
+                <div class="">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="35"
+                    height="35"
+                    fill="currentColor"
+                    class="bi bi-share"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M13.5 1a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3M11 2.5a2.5 2.5 0 1 1 .603 1.628l-6.718 3.12a2.5 2.5 0 0 1 0 1.504l6.718 3.12a2.5 2.5 0 1 1-.488.876l-6.718-3.12a2.5 2.5 0 1 1 0-3.256l6.718-3.12A2.5 2.5 0 0 1 11 2.5m-8.5 4a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3m11 5.5a1.5 1.5 0 1 0 0 3 1.5 1.5 0 0 0 0-3"
+                    />
+                  </svg>
+                </div>
+              </label>
+
+              {% if user.id == contribution.user.id %}
+              <label class="container-like">
+                <input
+                  type="checkbox"
+                  onclick="deleteContribution({{contribution.story.id}}, {{contribution.id}})"
+                />
+                <div class="">
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    width="35"
+                    height="35"
+                    fill="red"
+                    class="bi bi-trash"
+                    viewBox="0 0 16 16"
+                  >
+                    <path
+                      d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5m3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0z"
+                    />
+                    <path
+                      d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1zM4.118 4 4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4zM2.5 3h11V2h-11z"
+                    />
+                  </svg>
+                </div>
+              </label>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        <div class="col-md-3 card-style">
+          <div class="card h-100 right-side">
+            <div class="card-body">
+              <p>
+                Created by:
+                <a href="/profile/{{ contribution.user.id }}"
+                  >{{ contribution.user.username }}</a
+                >
+              </p>
+              <p>{{ contribution.created_at }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+  {% endfor %}
+</div>
+
+{% endblock %}

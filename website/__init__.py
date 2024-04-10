@@ -15,11 +15,11 @@ def create_app():
 
     from .views import views
     from .auth import auth
-
+    
     app.register_blueprint(views, url_prefix="/")
     app.register_blueprint(auth, url_prefix="/")
 
-    from .models import User, Story, Contribution, Like
+    from .models import User, Story, Contribution, Like_contribution, Like_story
     create_database(app)
 
     login_manager = LoginManager()
