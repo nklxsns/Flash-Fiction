@@ -36,8 +36,8 @@ block content %}
     class="modal-dialog modal-dialog-centered modal-dialog-scrollable"
     style="max-width: 90%"
   >
-    <div class="modal-content pb-4" style="color: black">
-      <div class="modal-header">
+   <div class="modal-content" style="color: white">
+      <div class="modal-header" style="background-color: #212529;">
         <h5 class="modal-title" id="exampleModalLabel">All Contributions</h5>
         <button
           type="button"
@@ -47,7 +47,7 @@ block content %}
           id="modal-closer"
         ></button>
       </div>
-      <div class="modal-body">
+      <div class="modal-body" style="background-color: #494949;">
         {% for contribution in contributions %}
         <section>
           <div class="container my-5 card-animation">
