@@ -1,7 +1,12 @@
 body {
   background-color: #494949;
 }
-
+.dropdown-item{
+  color: white !important;
+}
+.dropdown-menu{
+  background-color: #212529;
+}
 .profile-menu {
   .dropdown-menu {
     right: 0;
