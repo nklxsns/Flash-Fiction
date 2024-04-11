@@ -1,7 +1,9 @@
 body {
     color: white;
 }
-
+.modal-header{
+  border: none !important;
+}
 .modal-dialog {
   max-width: 75%;
 }
