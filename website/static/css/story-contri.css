@@ -62,3 +62,6 @@ input#title {
   stroke-linejoin: round;
   stroke-width: 2;
 }
+.ql-editor.ql-blank {
+  background-color: #494949;
+}
