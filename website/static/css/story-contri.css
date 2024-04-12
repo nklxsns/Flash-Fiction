@@ -46,6 +46,7 @@ div#nav-tabContent {
 }
 input#title {
   background-color: #494949;
+  color : white;
 }
 ::placeholder{
   color:white;
