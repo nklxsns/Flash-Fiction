@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Storify</title>
+
+    <link
+      href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+      rel="stylesheet"
+      integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH"
+      crossorigin="anonymous"
+    />
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css"
+    />
+    <link
+      href="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.2/dist/quill.snow.css"
+      rel="stylesheet"
+    />
+
+    <link
+      rel="stylesheet"
+      href="{{ url_for('static', filename='css/story-contri.css') }}"
+    />
+
+    
+    <link rel="icon" href="../static/images/icons8-book-96.png" />
+
+  </head>
+  <body>
+    <div class="d-flex justify-content-center align-items-center">
+      <div class="p-3 shadow align-items-center my-5" style="max-width: 90%; border-radius: 20px;">
+        <form action="/view-story/{{ story.id }}" onsubmit="sendData()">
+          <h2 class="text-center p-3">{{ story.title }}</h2>
+
+          <h5>Contribute for:</h5>
+          <p>{{ story.part3|safe }}</p>
+
+          <div class="mb-3 mt-5">
+            <label for="title" style="font-weight: bold"
+              >Contribution title:
+            </label>
+            <input name="title" type="text" id="title" required style="color: white;"/>
+          </div>
+          <div id="editor"></div>
+
+          <button
+            class="btn btn-primary my-3"
+            type="submit"
+            onclick="return validate()"
+          >
+            Submit
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <script
+      src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
+      integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
+      crossorigin="anonymous"
+    ></script>
+    <script src="https://cdn.jsdelivr.net/npm/quill@2.0.0-rc.2/dist/quill.js"></script>
+
+    <script>
+      const quill = new Quill("#editor", {
+        theme: "snow",
+      });
+
+      function sendData() {
+        const title = document.getElementById("title");
+        var quillval = quill.getSemanticHTML();
+
+        var postData = {
+          title: title.value,
+          content: quillval,
+        };
+        fetch("/create-contribution/{{ story.id }}", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(postData),
+        });
+      }
+
+      function validate() {
+        if (title.value === "") {
+          alert("Title cannot be empty");
+        } else if (quill.getLength() <= 5) {
+          alert("Content cannot have less than 50 characters");
+        } else {
+          return true;
+        }
+        return false;
+      }
+    </script>
+  </body>
+</html>
